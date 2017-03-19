@@ -15,4 +15,12 @@ class ItemCell: UITableViewCell {
     @IBOutlet weak var thumb: UIImageView!
     
     @IBOutlet weak var title: UILabel!
+    
+    
+    func configureCell(item: Item){
+    
+    title.text = item.title
+        price.text = "$ \(item.price)"
+        details.text = item.details
+    }
 }
