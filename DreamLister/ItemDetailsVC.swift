@@ -9,12 +9,20 @@
 import UIKit
 import CoreData
 
-class ItemDetailsVC: UIViewController,UIPickerViewDataSource,UIPickerViewDelegate {
+class ItemDetailsVC: UIViewController,UIPickerViewDataSource,UIPickerViewDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate {
 
     
     var stores = [Store]()
     var itemToEdit :Item?
+    var imagePicker :UIImagePickerController!
     
+    
+    
+    @IBAction func addImg(_ sender: Any) {
+        
+        present(imagePicker,animated:true,completion: nil)
+    }
+    @IBOutlet weak var thumbImg: UIImageView!
     @IBOutlet weak var storePicker :UIPickerView!
     @IBOutlet weak var titleField : UITextField!
     @IBOutlet weak var priceField :UITextField!
@@ -27,8 +35,8 @@ class ItemDetailsVC: UIViewController,UIPickerViewDataSource,UIPickerViewDelegat
         
             topItem.backBarButtonItem = UIBarButtonItem(title: "", style: UIBarButtonItemStyle.plain, target: nil, action: nil)
         }
-        
-        
+        imagePicker = UIImagePickerController()
+        imagePicker.delegate = self
         storePicker.delegate = self
         storePicker.dataSource = self
         
@@ -59,8 +67,15 @@ class ItemDetailsVC: UIViewController,UIPickerViewDataSource,UIPickerViewDelegat
         
         
         
+        
     }
 
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
+        if let img = info[UIImagePickerControllerOriginalImage] as? UIImage!{
+        thumbImg.image = img
+    }
+        imagePicker.dismiss(animated: true, completion: nil)
+    }
     func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
         let store = stores[row]
         return store.name
@@ -94,6 +109,7 @@ class ItemDetailsVC: UIViewController,UIPickerViewDataSource,UIPickerViewDelegat
         titleField.text = item.title
             priceField.text = "\(item.price)"
             detailsField.text = item.details
+            thumbImg.image = item.toImage?.image as? UIImage
             
             if let store = item.toStore{
             var index = 0
@@ -116,6 +132,8 @@ class ItemDetailsVC: UIViewController,UIPickerViewDataSource,UIPickerViewDelegat
     @IBAction func savePressed(_ sender: UIButton) {
         
         var item : Item!
+        let picture = Image(context: context)
+        picture.image = thumbImg.image
         if itemToEdit == nil{
         
             item = Item(context: context)
@@ -124,7 +142,7 @@ class ItemDetailsVC: UIViewController,UIPickerViewDataSource,UIPickerViewDelegat
         else{
         item = itemToEdit
         }
-        
+        item.toImage = picture
 
         if let title = titleField.text{
         item.title = title
