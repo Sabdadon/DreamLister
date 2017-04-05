@@ -250,6 +250,9 @@
                     <navigationItem key="navigationItem" title="Add/Edit" id="6va-z6-uPR">
                         <barButtonItem key="rightBarButtonItem" systemItem="trash" id="9hq-ei-6zh">
                             <color key="tintColor" red="1" green="0.1288638423" blue="0.12966603460000001" alpha="1" colorSpace="calibratedRGB"/>
+                            <connections>
+                                <action selector="deletePressed:" destination="fS9-c1-OKl" id="d68-Co-Oh6"/>
+                            </connections>
                         </barButtonItem>
                     </navigationItem>
                     <connections>
